@@ -20,7 +20,12 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 import constants as ct
 
-
+############################################################
+# マジックナンバーの解消
+############################################################
+KEY_MAX = 5
+CHUNK_SIZE = 500
+CHUNK_OVERLAP = 50
 ############################################################
 # 設定関連
 ############################################################
@@ -123,8 +128,8 @@ def initialize_retriever():
     
     # チャンク分割用のオブジェクトを作成
     text_splitter = CharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=50,
+        chunk_size=CHUNK_SIZE,
+        chunk_overlap=CHUNK_OVERLAP,
         separator="\n"
     )
 
@@ -135,7 +140,8 @@ def initialize_retriever():
     db = Chroma.from_documents(splitted_docs, embedding=embeddings)
 
     # ベクターストアを検索するRetrieverの作成
-    st.session_state.retriever = db.as_retriever(search_kwargs={"k": 3})
+    st.session_state.retriever = db.as_retriever(search_kwargs={"k": KEY_MAX})
+    #　変更 k=3 -> k=5 -> k=KEY_MAX
 
 
 def initialize_session_state():
