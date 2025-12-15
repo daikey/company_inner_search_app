@@ -18,7 +18,7 @@ import constants as ct
 with st.sidebar:
     st.markdown("### 利用目的")
     mode = st.radio(
-        label="",
+        label="モード選択",
         options=["社内文書検索", "社内問い合わせ"],
         index=0
     )
