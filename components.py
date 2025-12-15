@@ -6,22 +6,8 @@
 # ライブラリの読み込み
 ############################################################
 import streamlit as st
-import utils
 import constants as ct
-
-
-############################################################
-# 表示関連
-############################################################
-#サイドバー
-
-with st.sidebar:
-    st.markdown("### 利用目的")
-    mode = st.radio(
-        label="モード選択",
-        options=["社内文書検索", "社内問い合わせ"],
-        index=0
-    )
+import utils
 
 
 ############################################################
@@ -339,3 +325,22 @@ def display_contact_llm_response(llm_response):
         content["file_info_list"] = file_info_list
 
     return content
+
+############################################################
+# 表示関連
+############################################################
+#サイドバー
+
+with st.sidebar:
+    st.markdown("### 利用目的")
+    mode = st.radio(
+        label="モード選択",
+        options=["社内文書検索", "社内問い合わせ"],
+        index=0
+    )
+
+# セッションステートにモードが存在しない場合、初期値を設定
+if "mode" not in st.session_state:
+    st.session_state.mode = "社内文書検索"
+
+st.session_state.mode = mode
