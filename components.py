@@ -14,15 +14,19 @@ import utils
 # 関数定義
 ############################################################
 
+# def display_app_title():
+#     """
+#     タイトル表示
+#     """
+#     st.markdown(f"## {ct.APP_NAME}")
 def display_app_title():
-    """
-    タイトル表示
-    """
-    st.markdown(f"## {ct.APP_NAME}")
-
+    st.markdown(
+        f"<h1 style='text-align:center; margin-top:0.2rem; margin-bottom:1.0rem;'>{ct.APP_NAME}</h1>",
+        unsafe_allow_html=True
+    )
 
 def display_select_mode():
-    """回答モードのラジオボタンをサイドバーに表示"""
+    """サイドバーに：利用目的（ラジオ）＋説明＋入力例 を表示"""
     with st.sidebar:
         st.markdown("### 利用目的")
         st.session_state.mode = st.radio(
@@ -31,38 +35,29 @@ def display_select_mode():
             label_visibility="collapsed",
         )
 
-# def display_select_mode():
-#     """
-#     回答モードのラジオボタンを表示
-#     """
-#     # 回答モードを選択する用のラジオボタンを表示
-#     col1, col2 = st.columns([100, 1])
-#     with col1:
-#         # 「label_visibility="collapsed"」とすることで、ラジオボタンを非表示にする
-#         st.session_state.mode = st.radio(
-#             label="モード選択",
-#             options=[ct.ANSWER_MODE_1, ct.ANSWER_MODE_2],
-#             label_visibility="collapsed"
-#         )
+        st.divider()
+
+        # --- 社内文書検索の説明 ---
+        st.markdown("**【「社内文書検索」を選択した場合】**")
+        st.info("入力内容と関連性が高い社内文書のありかを検索できます。")
+        st.code("【入力例】\n社員の育成方針に関するMTGの議事録", wrap_lines=True, language=None)
+
+        # --- 社内問い合わせの説明 ---
+        st.markdown("**【「社内問い合わせ」を選択した場合】**")
+        st.info("質問・要望に対して、社内文書の情報をもとに回答を得られます。")
+        st.code("【入力例】\n人事部に所属している従業員情報を一覧化して", wrap_lines=True, language=None)
 
 def display_initial_ai_message():
-    """
-    AIメッセージの初期表示
-    """
     with st.chat_message("assistant"):
-        st.markdown("こんにちは。私は社内文書の情報をもとに回答する生成AIチャットボットです。サイドバーで利用目的を選び、下のチャット欄からメッセージを送信してください。")
+        st.success(
+            "こんにちは。私は社内文書の情報をもとに回答する生成AIチャットボットです。"
+            "サイドバーで利用目的を選択し、画面下部のチャット欄からメッセージを送信してください。",
+            icon="💼"
+        )
+        st.warning("具体的に入力したほうが期待通りの回答を得やすいです。", icon="⚠️")
+
 
         # 選択中モードだけ強調表示
-        if st.session_state.mode == ct.ANSWER_MODE_1:
-            st.markdown("**【「社内文書検索」を選択した場合】**")
-            st.info("入力内容と関連性が高い社内文書のありかを検索できます。")
-            st.code("【入力例】\n社員の育成方針に関するMTGの議事録", wrap_lines=True, language=None)
-            # 「wrap_lines=True」で折り返し設定、「language=None」で非装飾とする
-
-        elif st.session_state.mode == ct.ANSWER_MODE_2:
-            st.markdown("**【「社内問い合わせ」を選択した場合】**")
-            st.info("質問・要望に対して、社内文書の情報をもとに回答を得られます。")
-            st.code("【入力例】\n人事部に所属している従業員情報を一覧化して", wrap_lines=True, language=None)
             # 「wrap_lines=True」で折り返し設定、「language=None」で非装飾とする
 
 # def display_initial_ai_message():
