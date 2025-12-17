@@ -116,23 +116,8 @@ def get_llm_response(chat_message):
     return llm_response
 
 
-def format_source_with_location(doc) -> str:
-    source = doc.metadata.get("source", "")
-    ext = source.lower().split(".")[-1]
-
-    # PDF
-    if ext == "pdf" and "page" in doc.metadata:
-        return f"{source}（ページNo.{int(doc.metadata['page']) + 1}）"
-
-    # Word
-    if ext in ["docx", "doc"] and "paragraph" in doc.metadata:
-        return f"{source}（段落No.{int(doc.metadata['paragraph']) + 1}）"
-
-    # txt / md
-    if ext in ["txt", "md"] and "line_start" in doc.metadata:
-        return (
-            f"{source}（行 {doc.metadata['line_start']}–"
-            f"{doc.metadata.get('line_end', doc.metadata['line_start'])}）"
-        )
-
+def format_pdf_source(source: str, page: int | None) -> str:
+    """PDFのときだけ（ページNo.x）を付ける。pageは0始まり想定。"""
+    if isinstance(source, str) and source.lower().endswith(".pdf") and page is not None:
+        return f"{source}（ページNo.{int(page) + 1}）"
     return source
