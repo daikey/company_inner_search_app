@@ -213,17 +213,24 @@ def file_load(path, docs_all):
         path: ファイルパス
         docs_all: データソースを格納する用のリスト
     """
-    # ファイルの拡張子を取得
-    file_extension = os.path.splitext(path)[1]
-    # ファイル名（拡張子を含む）を取得
-    file_name = os.path.basename(path)
+    # ファイルの拡張子を取得（例: ".pdf"）
+    file_extension = os.path.splitext(path)[1].lower()
 
     # 想定していたファイル形式の場合のみ読み込む
-    if file_extension in ct.SUPPORTED_EXTENSIONS:
-        # ファイルの拡張子に合ったdata loaderを使ってデータ読み込み
-        loader = ct.SUPPORTED_EXTENSIONS[file_extension](path)
-        docs = loader.load()
-        docs_all.extend(docs)
+    if file_extension not in ct.SUPPORTED_EXTENSIONS:
+        return
+
+    # ファイルの拡張子に合った loader で読み込み
+    loader = ct.SUPPORTED_EXTENSIONS[file_extension](path)
+    docs = loader.load()
+
+    # ★追加：PDFは必ず page を持たせる（無い場合だけ補完）
+    if file_extension == ".pdf":
+        for i, d in enumerate(docs):
+            d.metadata.setdefault("page", i)
+
+    docs_all.extend(docs)
+
 
 
 def adjust_string(s):
