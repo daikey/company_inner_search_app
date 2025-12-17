@@ -114,3 +114,25 @@ def get_llm_response(chat_message):
     st.session_state.chat_history.extend([HumanMessage(content=chat_message), llm_response["answer"]])
 
     return llm_response
+
+
+def format_source_with_location(doc) -> str:
+    source = doc.metadata.get("source", "")
+    ext = source.lower().split(".")[-1]
+
+    # PDF
+    if ext == "pdf" and "page" in doc.metadata:
+        return f"{source}（ページNo.{int(doc.metadata['page']) + 1}）"
+
+    # Word
+    if ext in ["docx", "doc"] and "paragraph" in doc.metadata:
+        return f"{source}（段落No.{int(doc.metadata['paragraph']) + 1}）"
+
+    # txt / md
+    if ext in ["txt", "md"] and "line_start" in doc.metadata:
+        return (
+            f"{source}（行 {doc.metadata['line_start']}–"
+            f"{doc.metadata.get('line_end', doc.metadata['line_start'])}）"
+        )
+
+    return source
