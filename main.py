@@ -27,7 +27,7 @@ import constants as ct
 # ブラウザタブの表示文言を設定
 st.set_page_config(
     page_title=ct.APP_NAME,
-    layout="wide"
+    layout="centered"
     #広くする
 )
     
