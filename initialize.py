@@ -117,6 +117,15 @@ def initialize_retriever():
     # RAGの参照先となるデータソースの読み込み
     docs_all = load_data_sources()
 
+    # ===== txt 読み込みチェック =====
+    txt_docs = [d for d in docs_all if str(d.metadata.get("source", "")).lower().endswith(".txt")]
+    print("CHECK txt count:", len(txt_docs))
+    if txt_docs:
+        print("CHECK txt source:", txt_docs[0].metadata.get("source"))
+        print("CHECK txt content:", txt_docs[0].page_content[:80])
+# ===============================
+
+
     # OSがWindowsの場合、Unicode正規化と、cp932（Windows用の文字コード）で表現できない文字を除去
     for doc in docs_all:
         doc.page_content = adjust_string(doc.page_content)
